@@ -29,14 +29,18 @@ app.get('/streaming', function(req, res) {
   position = 1;
   dust.stream('hello', {
     'wait': function(chunk, context, bodies, params) {
-      var delayMilliseconds = parseInt(params.delay, 10) * 1000;
+      var delayMilliseconds = parseInt(params.delay, 10) * 10;
       // Returning a Promise-- Dust will wait for the promise to resolve
       return q(position++).delay(delayMilliseconds)
               .then(function(position) {
-                console.log('Rendering', params.name, 'which started in position', position);
+                console.log('Rendering', params.name, 'which started in position', position, " - body: ", bodies.block);
+		return bodies.block;
               });
     }
   }).pipe(res)
+    .on('data', function(segment){
+       console.log('Streaming - on data event: ', segment);
+    })
     .on('end', function() {
       console.log('Done!');
     });
@@ -46,15 +50,16 @@ app.get('/rendering', function(req, res) {
   position = 1;
   dust.render('hello', {
     'wait': function(chunk, context, bodies, params) {
-      var delayMilliseconds = parseInt(params.delay, 10) * 1000;
+      var delayMilliseconds = parseInt(params.delay, 10) * 10;
       // Returning a Promise-- Dust will wait for the promise to resolve
       return q(position++).delay(delayMilliseconds)
               .then(function(position) {
                 console.log('Rendering', params.name, 'which started in position', position);
+		return bodies.block;
               });
     }
   }, function(err, out) {
-    console.log('Done!');
+    console.log('Done! - out:', out);
     res.send(out);
   });
 });

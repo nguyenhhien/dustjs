@@ -19,8 +19,12 @@ app.get('/', function (req, res) {
         // Introducting an artificial delay to make streaming more apparent
         setTimeout(function() {
           request('http://www.dustjs.com/')
-          .on('data', chunk.write.bind(chunk))
-          .on('end', chunk.end.bind(chunk));
+          .on('data',
+             chunk.write.bind(chunk)
+          )
+          .on('end', 
+             chunk.end.bind(chunk)
+          );
         }, 3000);
       });
     }

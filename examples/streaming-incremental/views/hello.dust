@@ -1,5 +1,5 @@
 {#wait name="one" delay=1}
-  <p>Hello world! I'm delayed one second.
+  <p>Hello world! I'm delayed one second.</p>
 {/wait}
 
 {#wait name="two" delay=2}
